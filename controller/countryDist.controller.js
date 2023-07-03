@@ -2,7 +2,11 @@ const db = require("../db");
 
 class CountryDistController{
     async createCountryDist(req,res){
-
+        const coutry = res.params.county;
+        const dailyPrice = res.params.dailyPrice;
+        const ticketPrice = res.params.ticketPrice;
+        const visaPrice = res.params.visaPrice;
+        const cli = await db.query(`CALL ctry_dist_insert($1, $2, $3, $4)`,[coutry, dailyPrice,ticketPrice,visaPrice]);
     }
     async getCountryDist(req,res){
         const countryDist = await db.query(`SELECT * FROM ctry_dist`);

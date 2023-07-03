@@ -145,6 +145,24 @@ class ClientController {
 module.exports = new ClientController();
 ```
 В конце файла экспортируем экземляр созданного класса.
+## Вызор хранимых процедур
+Для вызова хранимой процедуры, в `db.query` необходимо передать запрос вызова процедуры `CALL procedure_name`
+
+Для примера, у меня на сервере Postgres хранятся процедуры, для их вызова, определим в классе котроллера
+функцию:
+```js
+#file controller/countryDist.controller.js
+   async createCountryDist(req,res){
+        const coutry = res.params.county;
+        const dailyPrice = res.params.dailyPrice;
+        const ticketPrice = res.params.ticketPrice;
+        const visaPrice = res.params.visaPrice;
+        const cli = await db.query(`CALL ctry_dist_insert($1, $2, $3, $4)`,[coutry, dailyPrice,ticketPrice,visaPrice]);
+}
+```
+Тогда в **POST** запросе передадим JSON объект с параметрами `country, dailyPrice,ticketPrice,visaPrice`,
+после этого эта функция вызовет хранимую на сервере Postgres процедуры и создастся запись 
+с передаваемыми параметрами.
 
 ## Тестирование
 Проверить работу сервера и запросов можно на запущенном сервере по адресу `localhost:PORT`.
